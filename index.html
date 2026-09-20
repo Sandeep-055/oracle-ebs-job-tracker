@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Oracle EBS Daily Job Tracker</title>
+<style>
+:root{font-family:Inter,system-ui,Arial,sans-serif;color:#172033;background:#f4f7fb}
+*{box-sizing:border-box}body{margin:0}.app{display:flex;min-height:100vh}
+aside{width:230px;background:#0e1729;color:white;padding:22px 14px;position:sticky;top:0;height:100vh}
+.logo{font-size:18px;font-weight:800;margin:0 8px 3px}.sub{font-size:11px;color:#aab6cb;margin:0 8px 22px}
+nav button{display:block;width:100%;text-align:left;border:0;background:transparent;color:#d9e2f2;padding:12px 10px;border-radius:8px;margin:3px 0;cursor:pointer}
+nav button.active,nav button:hover{background:#20304e;color:#fff}
+main{flex:1;padding:28px;max-width:1200px;margin:auto;width:100%}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.eyebrow{font-size:11px;font-weight:800;color:#496da5;letter-spacing:.12em}.title{font-size:27px;margin:3px 0 20px}
+button.primary{border:0;border-radius:7px;background:#3779df;color:#fff;padding:11px 16px;font-weight:700;cursor:pointer}
+.hero,.card{background:#fff;border:1px solid #e3e9f2;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px #1720330a}
+.hero h2{margin:0 0 8px}.muted{color:#68758a;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:#fff;border:1px solid #e3e9f2;border-radius:10px;padding:17px}.num{font-size:24px;font-weight:800}.label{font-size:12px;color:#718096}
+.jobs{display:grid;gap:12px}.job{background:#fff;border:1px solid #e3e9f2;border-radius:12px;padding:17px}
+.job h3{margin:0 0 7px;font-size:17px}.pill{display:inline-block;border-radius:20px;background:#eef5ff;color:#315e9e;padding:4px 8px;font-size:11px;margin:2px 4px 7px 0}
+.job a{color:#1769d1;text-decoration:none;font-weight:700}.empty{padding:30px;text-align:center;color:#69758a}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.filters input,.filters select{padding:10px;border:1px solid #d8e0eb;border-radius:7px;background:#fff}
+footer{color:#7a8597;font-size:11px;margin-top:25px}
+@media(max-width:720px){aside{width:165px;padding:15px 8px}.logo{font-size:15px}main{padding:15px}.stats{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start}.title{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside><div class="logo">Oracle EBS</div><div class="sub">Daily Job Tracker</div>
+<nav><button class="active" onclick="show('dashboard',this)">▣ Dashboard</button><button onclick="show('jobs',this)">◉ Today's Jobs</button><button onclick="show('all',this)">◌ All Jobs</button><button onclick="show('saved',this)">★ Saved</button></nav>
+</aside>
+<main>
+<div class="top"><div><div class="eyebrow">ORACLE EBS · INDIA</div><div class="title">Dashboard</div></div><button class="primary" onclick="loadJobs()">↻ Refresh Jobs</button></div>
+<section id="dashboard">
+<div class="hero"><h2>Find your next Oracle EBS role.</h2><div class="muted">Daily verified scan · India · 0–2 years · Oracle EBS SCM / Finance / Functional / Support.</div></div>
+<div class="stats">
+<div class="stat"><div class="num" id="active">0</div><div class="label">Active</div></div><div class="stat"><div class="num" id="today">0</div><div class="label">Posted ≤10 days</div></div><div class="stat"><div class="num" id="excellent">0</div><div class="label">Excellent 90+</div></div><div class="stat"><div class="num" id="strong">0</div><div class="label">Strong 85+</div></div>
+</div>
+<div class="card"><b>How the daily scan works</b><p class="muted">GitHub Actions runs the scanner automatically every day at 18:00 IST, updates the public job database, and republishes this page. No laptop needs to stay on.</p></div>
+</section>
+<section id="jobs" style="display:none"><div class="card"><h2>Today's Jobs</h2><div id="todayJobs" class="jobs"></div></div></section>
+<section id="all" style="display:none"><div class="card"><h2>All Verified Jobs</h2><div class="filters"><input id="q" placeholder="Search title/company/location" oninput="render()"></div><div id="allJobs" class="jobs"></div></div></section>
+<section id="saved" style="display:none"><div class="card"><h2>Saved Jobs</h2><div id="savedJobs" class="jobs"></div></div></section>
+<footer>Strict mode: no invented jobs. Publicly accessible sources only. Portal restrictions can prevent some listings from being verified.</footer>
+</main></div>
+<script>
+let jobs=[],saved=JSON.parse(localStorage.getItem('ebsSaved')||'[]');
+async function loadJobs(){
+  try{
+    const r=await fetch('../data/jobs.json?ts='+Date.now());
+    jobs=await r.json();
+  }catch(e){jobs=[]}
+  update(); render();
+}
+function update(){
+ const recent=jobs.filter(j=>j.verified);
+ document.getElementById('active').textContent=recent.length;
+ document.getElementById('today').textContent=recent.length;
+ document.getElementById('excellent').textContent=recent.filter(j=>j.match_score>=90).length;
+ document.getElementById('strong').textContent=recent.filter(j=>j.match_score>=85).length;
+}
+function card(j){
+ const s=saved.includes(j.id);
+ return `<article class="job"><h3>${esc(j.title)}</h3>
+ <span class="pill">${esc(j.company)}</span><span class="pill">${esc(j.location)}</span><span class="pill">${esc(j.experience)}</span><span class="pill">${j.match_score}% match</span>
+ <div class="muted">Posted: ${esc(j.posted_date)} · Source: ${esc(j.source)}</div><p><a href="${esc(j.url)}" target="_blank" rel="noopener">Original application ↗</a> &nbsp; <button onclick="toggleSave('${j.id}')">${s?'★ Saved':'☆ Save'}</button></p></article>`;
+}
+function render(){
+ let q=(document.getElementById('q')?.value||'').toLowerCase();
+ let filtered=jobs.filter(j=>(j.title+' '+j.company+' '+j.location).toLowerCase().includes(q));
+ document.getElementById('todayJobs').innerHTML=jobs.length?jobs.map(card).join(''):'<div class="empty">No verified jobs available yet. The daily GitHub scan will update this page.</div>';
+ document.getElementById('allJobs').innerHTML=filtered.length?filtered.map(card).join(''):'<div class="empty">No matching verified jobs.</div>';
+ let sj=jobs.filter(j=>saved.includes(j.id));
+ document.getElementById('savedJobs').innerHTML=sj.length?sj.map(card).join(''):'<div class="empty">No saved jobs.</div>';
+}
+function toggleSave(id){saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];localStorage.setItem('ebsSaved',JSON.stringify(saved));render()}
+function show(id,btn){document.querySelectorAll('main section').forEach(x=>x.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');render()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+loadJobs();
+</script>
+</body></html>
