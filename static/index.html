@@ -49,7 +49,7 @@ footer{color:#7a8597;font-size:11px;margin-top:25px}
 let jobs=[],saved=JSON.parse(localStorage.getItem('ebsSaved')||'[]');
 async function loadJobs(){
   try{
-    const r=await fetch('../data/jobs.json?ts='+Date.now());
+    const r=await fetch('jobs.json?ts='+Date.now());
     jobs=await r.json();
   }catch(e){jobs=[]}
   update(); render();
