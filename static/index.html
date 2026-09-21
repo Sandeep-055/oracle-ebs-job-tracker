@@ -2,82 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Oracle EBS Daily Job Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17233b">
+<meta name="description" content="Verified Oracle EBS SCM and Finance jobs in India (0-2 years), scanned daily.">
+<title>Oracle EBS India Job Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{font-family:Inter,system-ui,Arial,sans-serif;color:#172033;background:#f4f7fb}
-*{box-sizing:border-box}body{margin:0}.app{display:flex;min-height:100vh}
-aside{width:230px;background:#0e1729;color:white;padding:22px 14px;position:sticky;top:0;height:100vh}
-.logo{font-size:18px;font-weight:800;margin:0 8px 3px}.sub{font-size:11px;color:#aab6cb;margin:0 8px 22px}
-nav button{display:block;width:100%;text-align:left;border:0;background:transparent;color:#d9e2f2;padding:12px 10px;border-radius:8px;margin:3px 0;cursor:pointer}
-nav button.active,nav button:hover{background:#20304e;color:#fff}
-main{flex:1;padding:28px;max-width:1200px;margin:auto;width:100%}
-.top{display:flex;justify-content:space-between;gap:12px;align-items:center}
-.eyebrow{font-size:11px;font-weight:800;color:#496da5;letter-spacing:.12em}.title{font-size:27px;margin:3px 0 20px}
-button.primary{border:0;border-radius:7px;background:#3779df;color:#fff;padding:11px 16px;font-weight:700;cursor:pointer}
-.hero,.card{background:#fff;border:1px solid #e3e9f2;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px #1720330a}
-.hero h2{margin:0 0 8px}.muted{color:#68758a;font-size:13px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:#fff;border:1px solid #e3e9f2;border-radius:10px;padding:17px}.num{font-size:24px;font-weight:800}.label{font-size:12px;color:#718096}
-.jobs{display:grid;gap:12px}.job{background:#fff;border:1px solid #e3e9f2;border-radius:12px;padding:17px}
-.job h3{margin:0 0 7px;font-size:17px}.pill{display:inline-block;border-radius:20px;background:#eef5ff;color:#315e9e;padding:4px 8px;font-size:11px;margin:2px 4px 7px 0}
-.job a{color:#1769d1;text-decoration:none;font-weight:700}.empty{padding:30px;text-align:center;color:#69758a}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.filters input,.filters select{padding:10px;border:1px solid #d8e0eb;border-radius:7px;background:#fff}
-footer{color:#7a8597;font-size:11px;margin-top:25px}
-@media(max-width:720px){aside{width:165px;padding:15px 8px}.logo{font-size:15px}main{padding:15px}.stats{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start}.title{font-size:23px}}
+/* Design language: the green-bar ledger printout every Oracle EBS report used to arrive on.
+   The alternating bands are the one distinctive element; everything else stays quiet. */
+:root{--paper:#f8faf5;--card:#fff;--band:#e6f0e1;--rule:#c3d7bd;--ink:#17233b;--slate:#56647a;--ok:#17704f;--ok-bg:#d4ebdf;--warn:#8f5300;--warn-bg:#fff0cf;--bad:#a32a22;--bad-bg:#fbe1de;--focus:#1f5fd6;--top:#17233b;--top-ink:#f8faf5;--top-dim:#cfd8e6;--accent:#9fd3b4;
+--display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;--body:'Hanken Grotesk','Segoe UI',system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0f1a17;--card:#142320;--band:#17281f;--rule:#2b4238;--ink:#e8efe9;--slate:#a2b3a9;--ok:#6fd0a1;--ok-bg:#17362a;--warn:#f2b45a;--warn-bg:#3a2b10;--bad:#ff8f86;--bad-bg:#3d1a17;--focus:#8db4ff;--top:#0a120f;--top-ink:#e8efe9;--top-dim:#a2b3a9;--accent:#6fd0a1}}
+:root[data-theme="dark"]{--paper:#0f1a17;--card:#142320;--band:#17281f;--rule:#2b4238;--ink:#e8efe9;--slate:#a2b3a9;--ok:#6fd0a1;--ok-bg:#17362a;--warn:#f2b45a;--warn-bg:#3a2b10;--bad:#ff8f86;--bad-bg:#3d1a17;--focus:#8db4ff;--top:#0a120f;--top-ink:#e8efe9;--top-dim:#a2b3a9;--accent:#6fd0a1}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--body);font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(1.6rem,4vw,2.1rem);font-weight:700}h2{font-size:1.15rem;font-weight:700}h3{font-size:.95rem;font-weight:700;margin-bottom:6px}
+a{color:var(--ink)}button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.top{background:var(--top);color:var(--top-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.top-in{max-width:1040px;margin:0 auto;padding:10px 16px 0;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.mark{font-family:var(--display);font-weight:700;font-size:1.1rem}
+.nav{max-width:1040px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;padding:6px 10px 0;scrollbar-width:none}
+.nav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--top-dim);padding:8px 11px;white-space:nowrap;cursor:pointer;font-size:.93rem}
+.nav button[aria-current=page]{color:var(--top-ink);border-bottom-color:var(--accent);font-weight:700}
+main{max-width:1040px;margin:0 auto;padding:22px 16px 90px}
+.pagehead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 22px;margin-bottom:18px}
+.stamp{color:var(--slate);font-size:.9rem}
+.ledger{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);background:var(--card)}
+.ledger>*{border-bottom:1px solid var(--rule)}.ledger>*:nth-child(even){background:var(--band)}.ledger>*:last-child{border-bottom:0}
+.line{display:flex;align-items:baseline;gap:8px;padding:10px 12px}
+.line .lead{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-4px);min-width:12px}
+.line .num{font-family:var(--display);font-weight:700;font-size:1.25rem}
+.barrow{display:grid;grid-template-columns:minmax(90px,30%) 1fr 44px;gap:10px;align-items:center;padding:8px 12px}
+.barrow .track{height:10px;background:color-mix(in srgb,var(--ink) 12%,transparent)}.barrow .fill{display:block;height:100%;background:var(--ink)}.barrow .val{text-align:right;font-weight:700}
+.grid2{display:grid;gap:26px;margin-top:26px}@media(min-width:820px){.grid2{grid-template-columns:1fr 1fr}}
+.sec{margin:26px 0 8px}
+details.job>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:50px 1fr auto;gap:12px;padding:14px 12px;align-items:start}
+details.job>summary::-webkit-details-marker{display:none}
+.age{font-family:var(--display);font-weight:700;font-size:1.05rem}.age.no{color:var(--warn);font-size:.8rem}
+.jt{font-weight:700;display:block}.jsub{color:var(--slate);font-size:.92rem;display:block;margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{display:inline-block;font-size:.78rem;padding:2px 9px;border-radius:999px;border:1px solid var(--rule);background:var(--paper)}
+.chip.ok{background:var(--ok-bg);border-color:transparent;color:var(--ok)}.chip.warn{background:var(--warn-bg);border-color:transparent;color:var(--warn)}
+.chip.bad{background:var(--bad-bg);border-color:transparent;color:var(--bad)}.chip.miss{background:transparent;border-color:var(--warn);color:var(--warn)}
+.score{text-align:right;min-width:72px}.score b{font-family:var(--display);font-size:1.6rem;display:block;line-height:1}.score small{color:var(--slate);font-size:.72rem;display:block;margin-top:4px}
+.score.excellent b,.score.strong b{color:var(--ok)}
+.detail{padding:2px 12px 18px 74px;display:grid;gap:16px}@media(max-width:620px){.detail{padding-left:12px}details.job>summary{grid-template-columns:44px 1fr auto}}
+.why{border-left:4px solid var(--ok);padding:2px 0 2px 12px;margin:0}
+.ev{margin:0;padding-left:18px;color:var(--slate);font-size:.9rem}
+.desc{white-space:pre-wrap;max-height:260px;overflow:auto;padding:10px 12px;border:1px solid var(--rule);background:var(--paper);font-size:.93rem}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{display:inline-block;background:var(--ink);color:var(--paper);border:2px solid var(--ink);border-radius:4px;padding:8px 16px;text-decoration:none;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink)}.btn.small{padding:4px 12px;font-size:.9rem}.btn:disabled{opacity:.5;cursor:not-allowed}.btn.danger{border-color:var(--bad);color:var(--bad);background:transparent}
+.field{display:grid;gap:4px;margin-bottom:14px}.field>label,.lbl{font-weight:600;font-size:.9rem}.field small{color:var(--slate)}
+input[type=text],input[type=search],input[type=number],input[type=email],input[type=date],input[type=url],select,textarea{width:100%;padding:9px 10px;border:1.5px solid var(--slate);border-radius:4px;background:var(--card);min-height:44px}
+textarea{min-height:90px}
+.filters{border:1.5px solid var(--ink);padding:12px;margin-bottom:16px;background:var(--card)}.filters summary{cursor:pointer;font-weight:700}
+.fgroup{margin-top:14px}.fgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:12px}
+button.chip{cursor:pointer;padding:6px 12px;font-size:.86rem}button.chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.empty{padding:34px 16px;text-align:center;border:1.5px dashed var(--slate)}.empty p{margin:6px 0}
+.err{background:var(--bad-bg);color:var(--bad);padding:10px 12px;margin:12px 0}.info{background:var(--warn-bg);color:var(--warn);padding:10px 12px;margin:12px 0}.okbox{background:var(--ok-bg);color:var(--ok);padding:10px 12px;margin:12px 0}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.row{padding:12px}.portal-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:10px}
+.portal-grid a{display:block;padding:10px 12px;border:1.5px solid var(--ink);border-radius:4px;text-decoration:none;font-weight:700}.portal-grid small{display:block;font-weight:400;color:var(--slate);font-size:.78rem}
+.steps{margin:0;padding-left:20px}.steps li{margin:6px 0}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:4px;max-width:90vw;z-index:20;display:none}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem}
 </style>
 </head>
 <body>
-<div class="app">
-<aside><div class="logo">Oracle EBS</div><div class="sub">Daily Job Tracker</div>
-<nav><button class="active" onclick="show('dashboard',this)">▣ Dashboard</button><button onclick="show('jobs',this)">◉ Today's Jobs</button><button onclick="show('all',this)">◌ All Jobs</button><button onclick="show('saved',this)">★ Saved</button></nav>
-</aside>
-<main>
-<div class="top"><div><div class="eyebrow">ORACLE EBS · INDIA</div><div class="title">Dashboard</div></div><button class="primary" onclick="loadJobs()">↻ Refresh Jobs</button></div>
-<section id="dashboard">
-<div class="hero"><h2>Find your next Oracle EBS role.</h2><div class="muted">Daily verified scan · India · 0–2 years · Oracle EBS SCM / Finance / Functional / Support.</div></div>
-<div class="stats">
-<div class="stat"><div class="num" id="active">0</div><div class="label">Active</div></div><div class="stat"><div class="num" id="today">0</div><div class="label">Posted ≤10 days</div></div><div class="stat"><div class="num" id="excellent">0</div><div class="label">Excellent 90+</div></div><div class="stat"><div class="num" id="strong">0</div><div class="label">Strong 85+</div></div>
-</div>
-<div class="card"><b>How the daily scan works</b><p class="muted">GitHub Actions runs the scanner automatically every day at 18:00 IST, updates the public job database, and republishes this page. No laptop needs to stay on.</p></div>
-</section>
-<section id="jobs" style="display:none"><div class="card"><h2>Today's Jobs</h2><div id="todayJobs" class="jobs"></div></div></section>
-<section id="all" style="display:none"><div class="card"><h2>All Verified Jobs</h2><div class="filters"><input id="q" placeholder="Search title/company/location" oninput="render()"></div><div id="allJobs" class="jobs"></div></div></section>
-<section id="saved" style="display:none"><div class="card"><h2>Saved Jobs</h2><div id="savedJobs" class="jobs"></div></div></section>
-<footer>Strict mode: no invented jobs. Publicly accessible sources only. Portal restrictions can prevent some listings from being verified.</footer>
-</main></div>
+<header class="top"><div class="top-in"><span class="mark">Oracle EBS India Job Tracker</span><span class="stamp" id="who" style="color:var(--top-dim)"></span></div><nav class="nav" id="nav" aria-label="Main"></nav></header>
+<main id="app"></main>
+<div id="toast" role="status" aria-live="polite"></div>
 <script>
-let jobs=[],saved=JSON.parse(localStorage.getItem('ebsSaved')||'[]');
-async function loadJobs(){
-  try{
-    const r=await fetch('jobs.json?ts='+Date.now());
-    jobs=await r.json();
-  }catch(e){jobs=[]}
-  update(); render();
+'use strict';
+/* ═════════ helpers ═════════ */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const safeUrl = (u) => { try { const x = new URL(String(u).trim()); return /^https?:$/.test(x.protocol) ? x.href : null; } catch { return null; } };
+const hostOf = (u) => { try { return new URL(u).hostname.toLowerCase().replace(/^www\./, ''); } catch { return ''; } };
+const uid = () => 'EBS-' + Math.random().toString(16).slice(2, 10).toUpperCase();
+const FRESH = 10, MAXEXP = 2, RECHECK = 3, DAY = 86400000, IST = 'Asia/Kolkata';
+const istDate = (d) => new Intl.DateTimeFormat('en-CA', { timeZone: IST }).format(d);
+const fmtDate = (iso) => iso ? new Intl.DateTimeFormat('en-IN', { timeZone: IST, day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso)) : 'not stated';
+const fmtDT = (iso) => iso ? new Intl.DateTimeFormat('en-IN', { timeZone: IST, day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date(iso)) + ' IST' : 'never';
+const dayIdx = (d) => Math.floor((+new Date(d) + 19800000) / DAY);
+const ageDays = (iso, now = Date.now()) => dayIdx(now) - dayIdx(iso);
+const uniq = (xs) => { const s = new Set(); return xs.map((x) => String(x).trim()).filter((x) => x && !s.has(x.toLowerCase()) && s.add(x.toLowerCase())); };
+const listOf = (s) => uniq(String(s || '').split(/[,\n]/));
+
+/* ═════════ Oracle EBS vocabulary ═════════ */
+const MODULES = [
+  { c: 'PO', l: 'Purchasing', cat: 'SCM', n: [/\bpurchasing\b/i, /\bpurchase orders?\b/i], k: [/\bPO\b/] },
+  { c: 'INV', l: 'Inventory', cat: 'SCM', n: [/\binventory\b/i], k: [/\bINV\b/] },
+  { c: 'OM', l: 'Order Management', cat: 'SCM', n: [/\border management\b/i], k: [/\bOM\b/] },
+  { c: 'SOURCING', l: 'Sourcing', cat: 'SCM', n: [/\boracle sourcing\b/i, /\bsourcing\b/i, /\bsupplier negotiation/i] },
+  { c: 'IPROC', l: 'iProcurement', cat: 'SCM', n: [/\bi-?procurement\b/i] },
+  { c: 'WMS', l: 'Warehouse Management', cat: 'SCM', n: [/\bwarehouse management\b/i, /\bWMS\b/] },
+  { c: 'BOM', l: 'Bills of Material', cat: 'SCM', n: [/\bbills? of materials?\b/i], k: [/\bBOM\b/] },
+  { c: 'SHIPPING', l: 'Shipping Execution', cat: 'SCM', n: [/\bshipping execution\b/i] },
+  { c: 'ASCP', l: 'Supply Chain Planning', cat: 'SCM', n: [/\badvanced supply chain planning\b/i], k: [/\bASCP\b/] },
+  { c: 'AP', l: 'Payables', cat: 'Finance', n: [/\baccounts payables?\b/i, /\bpayables\b/i], k: [/\bAP\b/] },
+  { c: 'AR', l: 'Receivables', cat: 'Finance', n: [/\baccounts receivables?\b/i, /\breceivables\b/i], k: [/\bAR\b/] },
+  { c: 'GL', l: 'General Ledger', cat: 'Finance', n: [/\bgeneral ledger\b/i], k: [/\bGL\b/] },
+  { c: 'FA', l: 'Fixed Assets', cat: 'Finance', n: [/\bfixed assets?\b/i], k: [/\bFA\b/] },
+  { c: 'CM', l: 'Cash Management', cat: 'Finance', n: [/\bcash management\b/i], k: [/\bCM\b/] },
+  { c: 'TAX', l: 'GST/TDS/EBTax (India localization)', cat: 'Finance', n: [/\be-?b-?tax\b/i, /\bIndia localization\b/i, /\bGST\b/, /\bTDS\b/, /\bJAI\b/] },
+  { c: 'AME', l: 'Approval Management Engine', cat: 'Other', n: [/\bapproval management engine\b/i], k: [/\bAME\b/] },
+];
+const PROC = { P2P: { p: [/\bp2p\b/i, /\bprocure[- ]to[- ]pay\b/i], from: ['PO', 'IPROC', 'SOURCING', 'AP'] }, O2C: { p: [/\bo2c\b/i, /\border[- ]to[- ]cash\b/i], from: ['OM', 'AR', 'SHIPPING'] } };
+const MLABEL = Object.assign(Object.fromEntries(MODULES.map((m) => [m.c, m.l])), { P2P: 'Procure-to-Pay', O2C: 'Order-to-Cash' });
+const FUNC = [
+  ['Requirement gathering', /requirements? (gathering|analysis|elicitation)|gather(ing)? requirements/i], ['Gap analysis', /gap analysis|fit[- ]gap/i],
+  ['Functional specs (FS/BRD)', /\bBRD\b|\bFRD\b|\bMD50\b|functional (specification|design|spec)s?/i], ['UAT / test cases', /\bUAT\b|user acceptance|test (cases|scripts|scenarios)|\bSIT\b/i],
+  ['Setup & configuration', /\bset-?ups?\b|\bconfiguration\b|\bconfigur(e|ing)\b/i], ['Data migration', /data (migration|conversion|load)/i],
+  ['Production support', /(production|application|l1|l2|l3|functional) support|incident|service requests?|tickets?\b|\bSLA\b/i], ['Ticketing tools', /service ?now|remedy|\bjira\b|freshservice|zendesk/i],
+  ['Period-end close', /period[- ]end|month[- ]end|year[- ]end|period close/i], ['Reconciliation', /reconciliation/i], ['Approvals / workflow', /approvals?\b|\bworkflow\b|\bAME\b/i],
+  ['Process mapping', /process (mapping|flows?|documentation)|as-is|to-be/i], ['Training / documentation', /(end[- ]user )?training|user manuals?|documentation/i],
+  ['India GST/TDS', /\bGST\b|\bTDS\b|India localization|\bJAI\b|e-?invoic/i], ['Stakeholder communication', /stakeholders?|client (interaction|communication)|business users/i],
+];
+const TECH = [
+  ['SQL', /\bsql\b/i], ['PL/SQL', /pl\s*\/?\s*sql/i], ['BI/XML Publisher', /\b(bi|xml) publisher\b/i], ['Oracle Forms & Reports', /oracle (forms|reports)|forms 6i|reports 6i/i],
+  ['OAF', /\bOAF\b/], ['Workflow Builder', /workflow builder/i], ['Interfaces / APIs', /open interfaces?|\bAPIs?\b|\bRICE\b|\bEDI\b|interfaces\b/i],
+  ['Concurrent programs', /concurrent (program|request)s?/i], ['TOAD / SQL Developer', /\btoad\b|sql developer/i], ['Unix / Shell', /\bunix\b|\bshell script/i],
+  ['Oracle APEX', /\bapex\b/i], ['Oracle Fusion / Cloud', /oracle fusion|oracle cloud|\bOCI\b/i],
+];
+function hasEbs(t) {
+  if (!t) return false;
+  if (/\be-?business\s+suite\b/i.test(t) || /\boracle\s+(apps|applications)\b/i.test(t)) return true;
+  const o = /\boracle\b/i.test(t);
+  return o && (/\bebs\b/i.test(t) || /\br12(\.\d+){0,2}\b/i.test(t));
 }
-function update(){
- const recent=jobs.filter(j=>j.verified);
- document.getElementById('active').textContent=recent.length;
- document.getElementById('today').textContent=recent.length;
- document.getElementById('excellent').textContent=recent.filter(j=>j.match_score>=90).length;
- document.getElementById('strong').textContent=recent.filter(j=>j.match_score>=85).length;
+const ebsCount = (t) => (t.match(/\b(ebs|e-?business suite|oracle apps|r12(?:\.\d+){0,2})\b/gi) || []).length;
+function detectModules(t, allowShort) {
+  const f = new Set();
+  for (const m of MODULES) if (m.n.some((r) => r.test(t)) || (allowShort && (m.k || []).some((r) => r.test(t)))) f.add(m.c);
+  for (const [tag, d] of Object.entries(PROC)) if (d.p.some((r) => r.test(t)) || d.from.some((c) => f.has(c))) f.add(tag);
+  const cats = new Set();
+  for (const c of f) { const d = MODULES.find((m) => m.c === c); if (d && d.cat === 'SCM') cats.add('SCM'); if (d && d.cat === 'Finance') cats.add('Finance'); if (c === 'P2P' || c === 'O2C') cats.add('SCM'); }
+  if (/\bsupply chain\b|\bscm\b/i.test(t)) cats.add('SCM');
+  if (/\bfinancials?\b|\bfinance\b|\baccounting\b/i.test(t)) cats.add('Finance');
+  return { modules: [...f], categories: [...cats] };
 }
-function card(j){
- const s=saved.includes(j.id);
- return `<article class="job"><h3>${esc(j.title)}</h3>
- <span class="pill">${esc(j.company)}</span><span class="pill">${esc(j.location)}</span><span class="pill">${esc(j.experience)}</span><span class="pill">${j.match_score}% match</span>
- <div class="muted">Posted: ${esc(j.posted_date)} · Source: ${esc(j.source)}</div><p><a href="${esc(j.url)}" target="_blank" rel="noopener">Original application ↗</a> &nbsp; <button onclick="toggleSave('${j.id}')">${s?'★ Saved':'☆ Save'}</button></p></article>`;
+const skillsIn = (t) => ({ functional: FUNC.filter(([, r]) => r.test(t)).map(([n]) => n), technical: TECH.filter(([, r]) => r.test(t)).map(([n]) => n) });
+
+/* ═════════ location, experience, work mode ═════════ */
+const CITY = { bangalore: 'Bengaluru', bengaluru: 'Bengaluru', bombay: 'Mumbai', mumbai: 'Mumbai', 'navi mumbai': 'Navi Mumbai', thane: 'Thane', gurgaon: 'Gurugram', gurugram: 'Gurugram', madras: 'Chennai', chennai: 'Chennai', calcutta: 'Kolkata', kolkata: 'Kolkata', hyderabad: 'Hyderabad', secunderabad: 'Hyderabad', pune: 'Pune', noida: 'Noida', 'greater noida': 'Noida', ghaziabad: 'Ghaziabad', faridabad: 'Faridabad', delhi: 'Delhi', 'new delhi': 'Delhi', 'delhi ncr': 'Delhi', ahmedabad: 'Ahmedabad', vadodara: 'Vadodara', surat: 'Surat', gandhinagar: 'Gandhinagar', kochi: 'Kochi', cochin: 'Kochi', thiruvananthapuram: 'Thiruvananthapuram', trivandrum: 'Thiruvananthapuram', coimbatore: 'Coimbatore', madurai: 'Madurai', jaipur: 'Jaipur', indore: 'Indore', bhopal: 'Bhopal', nagpur: 'Nagpur', chandigarh: 'Chandigarh', mohali: 'Mohali', lucknow: 'Lucknow', kanpur: 'Kanpur', bhubaneswar: 'Bhubaneswar', visakhapatnam: 'Visakhapatnam', vizag: 'Visakhapatnam', vijayawada: 'Vijayawada', mysore: 'Mysuru', mysuru: 'Mysuru', mangalore: 'Mangaluru', mangaluru: 'Mangaluru', patna: 'Patna', ranchi: 'Ranchi', raipur: 'Raipur', dehradun: 'Dehradun', goa: 'Goa' };
+const STATES = ['andhra pradesh', 'telangana', 'karnataka', 'tamil nadu', 'kerala', 'maharashtra', 'gujarat', 'rajasthan', 'delhi', 'haryana', 'uttar pradesh', 'west bengal', 'madhya pradesh', 'odisha', 'punjab', 'bihar', 'jharkhand', 'chhattisgarh', 'uttarakhand', 'goa', 'chandigarh'];
+const FOREIGN = /\b(united states|usa|u\.s\.a?\.?|united kingdom|\buk\b|england|canada|australia|singapore|uae|dubai|abu dhabi|saudi|qatar|kuwait|oman|bahrain|germany|netherlands|ireland|philippines|malaysia|south africa|nigeria|kenya|new zealand|japan|china|hong kong)\b/i;
+function isIndia(loc) {
+  if (!loc) return false;
+  const l = loc.toLowerCase();
+  if (/\bindia\b/.test(l) || Object.keys(CITY).some((c) => new RegExp('\\b' + c + '\\b').test(l)) || STATES.some((s) => l.includes(s))) return true;
+  return false;
 }
-function render(){
- let q=(document.getElementById('q')?.value||'').toLowerCase();
- let filtered=jobs.filter(j=>(j.title+' '+j.company+' '+j.location).toLowerCase().includes(q));
- document.getElementById('todayJobs').innerHTML=jobs.length?jobs.map(card).join(''):'<div class="empty">No verified jobs available yet. The daily GitHub scan will update this page.</div>';
- document.getElementById('allJobs').innerHTML=filtered.length?filtered.map(card).join(''):'<div class="empty">No matching verified jobs.</div>';
- let sj=jobs.filter(j=>saved.includes(j.id));
- document.getElementById('savedJobs').innerHTML=sj.length?sj.map(card).join(''):'<div class="empty">No saved jobs.</div>';
+function parseLocation(raw) {
+  const location = (raw || '').replace(/\s+/g, ' ').trim() || null;
+  if (!location) return { location: null, city: null, state: null };
+  const parts = location.split(/[,|/;]| - /).map((p) => p.trim().replace(/\bindia\b/i, '').trim()).filter(Boolean);
+  let city = null, state = null;
+  for (const p of parts) { const k = p.toLowerCase(); if (!city && CITY[k]) city = CITY[k]; if (!state && STATES.includes(k)) state = p.replace(/\b\w/g, (c) => c.toUpperCase()); }
+  if (!city && parts[0] && !STATES.includes(parts[0].toLowerCase()) && !/^remote$/i.test(parts[0])) city = parts[0].replace(/\b\w/g, (c) => c.toUpperCase());
+  return { location, city, state };
 }
-function toggleSave(id){saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];localStorage.setItem('ebsSaved',JSON.stringify(saved));render()}
-function show(id,btn){document.querySelectorAll('main section').forEach(x=>x.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');render()}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-loadJobs();
-</script>
-</body></html>
+function parseExperience(text) {
+  const none = { min: null, max: null, text: null };
+  if (!text) return none;
+  const t = String(text).slice(0, 20000), c = [];
+  for (const m of t.matchAll(/(\d+(?:\.\d+)?)\s*(?:-|–|—|to)\s*(\d+(?:\.\d+)?)\s*\+?\s*(years?|yrs?|months?)/gi)) { const k = /month/i.test(m[3]) ? 1 / 12 : 1; c.push({ min: +m[1] * k, max: +m[2] * k, text: m[0], idx: m.index }); }
+  for (const m of t.matchAll(/(?:minimum|min\.?|at least)?\s*(\d+(?:\.\d+)?)\s*\+?\s*(years?|yrs?|months?)(?:\s+of)?\s+(?:relevant\s+|hands-on\s+|functional\s+|total\s+)?(?:experience|exp)/gi)) { const k = /month/i.test(m[2]) ? 1 / 12 : 1; const plus = /\+|minimum|min|at least/i.test(m[0]); c.push({ min: +m[1] * k, max: plus ? null : +m[1] * k, text: m[0].trim(), idx: m.index }); }
+  for (const m of t.matchAll(/\b(freshers?|entry[- ]level|graduate trainee|no experience (?:required|needed))\b/gi)) c.push({ min: 0, max: 1, text: m[0], idx: m.index });
+  if (!c.length) { const m = t.match(/(\d+(?:\.\d+)?)\s*(?:-|–|to)\s*(\d+(?:\.\d+)?)\s*(?:years?|yrs?)/i); if (m) c.push({ min: +m[1], max: +m[2], text: m[0], idx: m.index }); }
+  if (!c.length) return none;
+  const pick = c.find((x) => /exp/i.test(t.slice(Math.max(0, x.idx - 60), x.idx + x.text.length + 60))) || c[0];
+  const r = (n) => Math.round(n * 10) / 10;
+  return { min: r(pick.min), max: pick.max == null ? null : r(pick.max), text: pick.text };
+}
+function workMode(hint, title, loc, desc) {
+  const h = (hint || '').toLowerCase();
+  if (/hybrid/.test(h)) return 'hybrid'; if (/remote|work from home|wfh/.test(h)) return 'remote'; if (/on-?site|office/.test(h)) return 'onsite';
+  const head = (title + ' ' + (loc || '')).toLowerCase();
+  if (/\bhybrid\
