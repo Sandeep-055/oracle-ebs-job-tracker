@@ -1,61 +1,100 @@
 name: Daily Oracle EBS Job Scan
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:            # Actions tab -> Run workflow
   schedule:
-    - cron: "30 12 * * *"
+    - cron: "45 0 * * *"        # 06:15 IST
+    - cron: "30 12 * * *"       # 18:00 IST
+  push:                         # editing the site, scanner or config republishes immediately
+    branches: [main]
+    paths:
+      - "static/**"
+      - "scripts/**"
+      - "config/**"
+      - ".github/workflows/daily-scan.yml"
+
+concurrency:
+  group: ebs-scan
+  cancel-in-progress: false
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
+    timeout-minutes: 20
+    permissions:
+      contents: write
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Scan Oracle EBS jobs
+      - name: Self-test (offline, no keys needed)
+        run: |
+          if [ -d tests ]; then python -m unittest discover -s tests; else echo "no tests folder, skipping"; fi
+
+      - name: Scan jobs
+        env:
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          JSEARCH_API_KEY: ${{ secrets.JSEARCH_API_KEY }}
         run: python scripts/scan_jobs.py
 
-      - name: Save updated jobs
+      - name: Save results to the repository
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/jobs.json
-          git diff --cached --quiet || git commit -m "Daily Oracle EBS job scan"
-          git push
-
-      - name: Upload website
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: static
+          git add data/
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+          else
+            git commit -m "Job scan $(date -u '+%Y-%m-%d %H:%M') UTC"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
 
   deploy:
     needs: scan
+    if: ${{ !cancelled() }}     # still publish the site if a scan step failed
     runs-on: ubuntu-latest
-
     permissions:
+      contents: read
       pages: write
       id-token: write
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
-      - name: Deploy GitHub Pages
+      - name: Checkout latest
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Build site folder (site + data together)
+        run: |
+          mkdir -p _site/data
+          cp -r static/. _site/
+          cp data/*.json _site/data/ 2>/dev/null || true
+          touch _site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
