@@ -419,4 +419,4 @@ RESTRICTED = {
     "linkedin": "No public job-search API; automated collection is prohibited by LinkedIn's terms. Use the search links on the site, or JSearch.",
     "naukri": "No public job-search API; automated collection is prohibited by Naukri's terms. Use the search links on the site, or JSearch.",
     "indeed": "No self-serve public job-search API; automated collection is prohibited by Indeed's terms. Use the search links on the site, or JSearch.",
-    "glassdoor": "Partner-only API; autom
+    "glassdoor": "Partner-only API; automated access is not available",
