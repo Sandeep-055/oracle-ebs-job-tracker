@@ -3,8 +3,7 @@ name: Daily Oracle EBS Job Scan
 on:
   workflow_dispatch:            # Actions tab -> Run workflow
   schedule:
-    - cron: "45 0 * * *"        # 06:15 IST
-    - cron: "30 12 * * *"       # 18:00 IST
+    - cron: "0 1 * * *"         # 06:30 IST daily
   push:                         # editing the site, scanner or config republishes immediately
     branches: [main]
     paths:
